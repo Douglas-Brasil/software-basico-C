@@ -1,18 +1,18 @@
-# 📚 Repositório da Disciplina de **Programação de Software Básico em C**  
+# 📚 Repositório da Disciplina de **Programação de Software Básico em C, Turma 3002**  
 **🏫 Unifavip Wyden**  
 
 ---
 
 ## 💻 Sobre o Projeto  
 Este repositório reúne e disponibiliza todas as **atividades e exercícios** desenvolvidos na disciplina de **Programação de Software Básico**, ministrada na **Unifavip Wyden**.  
-O conteúdo é destinado **exclusivamente para fins educativos e pedagógicos**, voltado para alunos **regularmente matriculados**.  
+O conteúdo é destinado **exclusivamente para fins educativos e pedagógicos**, voltado para alunos **regularmente matriculados na turma 3002**.  
 
 ---
 
 ## 🚀 Tecnologias Utilizadas  
 - 🖥 **Linguagem:** C  
 - 🎨 **APIs:** OpenGL  
-- 🛠 **Ferramentas:** Git, GitHub, qualquer IDE de desenvolvimento em C (preferencialmente **Dev-C++ 5.11**)  
+- 🛠 **Ferramentas:** Git, GitHub e qualquer IDE de desenvolvimento em C (preferencialmente **Dev-C++ 5.11**)  
 
 ---
 
@@ -34,9 +34,9 @@ Certifique-se de ter o compilador C configurado corretamente.
 ---
 
 ### 📌 Observações Importantes
-⚠ Este repositório é público apenas para fins acadêmicos.
-📚 Todos os códigos podem ser estudados, modificados e testados livremente.
-🚫 Não utilize o conteúdo para fins comerciais ou plágio em avaliações.
+- ⚠ Este repositório é público apenas para fins acadêmicos.
+- 📚 Todos os códigos podem ser estudados, modificados e testados livremente.
+- 🚫 Não utilize o conteúdo para fins comerciais ou plágio em avaliações.
 
 ---
 
