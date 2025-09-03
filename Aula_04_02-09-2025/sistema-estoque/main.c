@@ -7,23 +7,28 @@
 char menu();
 
 int main(int argc, char *argv[]) {
-    char opcao = menu();
-    
-    // Use %c para imprimir o caractere
-    printf("%c\n", opcao); 
-
-    if (opcao == '1') {
-        printf("cadastrar");
-    } else if (opcao == '2') {
-        printf("editar");
-    } else if (opcao == '3') {
-        printf("deletar");
-    } else if (opcao == '4') {
-        printf("listar");
-    } else if (opcao == '0'){
-        printf("fechar sistema");
-    }
-    
+	while (true) {
+		char opcao = menu();
+	
+	    if (opcao == '1') {
+			char produto[30];
+			printf("Digite o nome do produto: ");
+			scanf("%s", produto);
+			
+			cadastrar(produto);
+			
+	    } else if (opcao == '2') {
+	        printf("editar");
+	    } else if (opcao == '3') {
+	        printf("deletar");
+	    } else if (opcao == '4') {
+	        printf("listar");
+	    } else if (opcao == '0'){
+	        printf("fechar sistema");
+	        break;
+	    }
+	}
+	
     return 0;
 }
 
@@ -49,6 +54,22 @@ char menu() {
             printf("\nOpcao invalida, por favor escolha uma das opcoes do menu! \n");
         }
     }
+}
+
+FILE *criarOuCarregarArquivo(){
+	FILE *arquivo;
+	arquivo = fopen("estoque.txt", "a");
+	return arquivo;
+}
+void fecharArquivo(FILE *arquivo){
+	fclose(arquivo);
+}
+
+void cadastrar(char *produto) {
+	FILE *arquivo = criarOuCarregarArquivo();
+	fprintf(arquivo, "%s \n", produto);
+	fecharArquivo(arquivo);
+	printf("Produto cadastrado com sucesso. \n \n");
 }
 
 
