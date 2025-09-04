@@ -1,9 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <string.h> // Inclua esta biblioteca para usar strcmp()
+#include <string.h> 
 
-// A função menu() agora retorna um char
 char menu();
 
 int main(int argc, char *argv[]) {
@@ -11,14 +10,18 @@ int main(int argc, char *argv[]) {
 		char opcao = menu();
 	
 	    if (opcao == '1') {
-			char produto[30];
+			char produto[100];
 			printf("Digite o nome do produto: ");
 			scanf("%s", produto);
 			
 			cadastrar(produto);
 			
 	    } else if (opcao == '2') {
-	        printf("editar");
+	    	char produto[30];
+			printf("Digite o nome do produto que voce quer editar: ");
+			scanf("%s", produto);
+			
+			editar(produto);
 	    } else if (opcao == '3') {
 	        printf("deletar");
 	    } else if (opcao == '4') {
@@ -56,21 +59,60 @@ char menu() {
     }
 }
 
-FILE *criarOuCarregarArquivo(){
+FILE *criarOuCarregarArquivo(char *nomeArquivo, char *tipoLeitura){
 	FILE *arquivo;
-	arquivo = fopen("estoque.txt", "a");
+	arquivo = fopen(nomeArquivo, tipoLeitura);
 	return arquivo;
 }
+
 void fecharArquivo(FILE *arquivo){
 	fclose(arquivo);
 }
 
 void cadastrar(char *produto) {
-	FILE *arquivo = criarOuCarregarArquivo();
+	FILE *arquivo = criarOuCarregarArquivo("estoque.txt", "a+");
 	fprintf(arquivo, "%s \n", produto);
 	fecharArquivo(arquivo);
 	printf("Produto cadastrado com sucesso. \n \n");
 }
 
+void editar(char *produto) {
+    FILE *arquivo = criarOuCarregarArquivo("estoque.txt", "r");
+    FILE *temp = criarOuCarregarArquivo("arquivoTemporario.txt", "w");
+    char produtoLidoNoArquivo[100];
+    bool encontrado = false;
 
-	
+    while (fscanf(arquivo, "%s", produtoLidoNoArquivo) == 1) {
+        if (strcmp(produtoLidoNoArquivo, produto) == 0) {
+            char novoProduto[100];
+            printf("Produto encontrado, qual o produto que vai ficar no lugar? ");
+            scanf("%99s", novoProduto);
+
+            fprintf(temp, "%s\n", novoProduto); // escreve o novo produto
+            encontrado = true;
+        } else {
+            fprintf(temp, "%s\n", produtoLidoNoArquivo); // mantém os antigos
+        }
+    }
+    
+    if (encontrado) {
+    	printf("Edicao salva com sucesso.");
+	} else {
+		printf("Produto não encontrado no estoque.");
+	}
+	printf("\n \n");
+    fclose(arquivo);
+    fclose(temp);
+
+    // substitui o original pelo temporário
+    remove("estoque.txt");
+    rename("arquivoTemporario.txt", "estoque.txt");
+}
+
+
+
+
+
+
+
+
