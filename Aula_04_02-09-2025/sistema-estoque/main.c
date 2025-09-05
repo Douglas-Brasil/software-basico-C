@@ -13,17 +13,20 @@ int main(int argc, char *argv[]) {
 			char produto[100];
 			printf("Digite o nome do produto: ");
 			scanf("%s", produto);
-			
 			cadastrar(produto);
 			
 	    } else if (opcao == '2') {
-	    	char produto[30];
+	    	char produto[100];
 			printf("Digite o nome do produto que voce quer editar: ");
 			scanf("%s", produto);
-			
 			editar(produto);
+			
 	    } else if (opcao == '3') {
-	        printf("deletar");
+	    	char produto[100];
+	    	printf("Digite o nome do produto que voce quer deletar: ");
+	    	scanf("%s", produto);
+	    	deletar(produto);
+	    	
 	    } else if (opcao == '4') {
 	        printf("listar");
 	    } else if (opcao == '0'){
@@ -112,16 +115,48 @@ void editar(char *produtoSobrescrever) {
         rewind(arquivoEstoque);
         sobrescreverProduto(arquivoEstoque, arquivoTemporario, produtoSobrescrever, novoProduto);
 	} else {
-		printf("Produto não encontrado no estoque.");
+		printf("Produto nao encontrado no estoque.");
 	}
 	
 	printf("\n \n");
-    fclose(arquivoEstoque);
-    fclose(arquivoTemporario);
+	fecharArquivo(arquivoEstoque);
+	fecharArquivo(arquivoTemporario);
 
     // substitui o original pelo temporário
     remove("estoque.txt");
     rename("arquivoTemporario.txt", "estoque.txt");
+}
+
+void removerProduto (FILE *arquivoEstoque, FILE *arquivoTemporario, char *produtoDeletar) {
+	char produtoLidoNoArquivo[100];
+	
+	while (fscanf(arquivoEstoque, "%s", produtoLidoNoArquivo) == 1) {
+		if (strcmp(produtoLidoNoArquivo, produtoDeletar) != 0) {
+			fprintf(arquivoTemporario, "%s\n", produtoLidoNoArquivo);
+		}
+	}
+	
+	printf("Remoção salva com sucesso.");
+}
+void deletar(char *produtoDeletar) {
+	FILE *arquivoEstoque = criarOuCarregarArquivo("estoque.txt", "r");
+	FILE *arquivoTemporario = criarOuCarregarArquivo("arquivoTemporario", "w");
+	
+	bool existe = verificarSeProdutoExiste(arquivoEstoque, produtoDeletar);
+	
+	if (existe) {
+		rewind(arquivoEstoque);
+		removerProduto(arquivoEstoque, arquivoTemporario, produtoDeletar);
+	} else {
+		printf("Produto nao encontrado no estoque");
+	}
+	printf("\n \n");
+	fecharArquivo(arquivoEstoque);
+	fecharArquivo(arquivoTemporario);
+	
+	remove("estoque.txt");
+	rename("arquivoTemporario", "estoque.txt");
+	
 }
 
 
