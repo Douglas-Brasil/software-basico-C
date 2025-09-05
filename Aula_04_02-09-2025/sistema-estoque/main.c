@@ -76,39 +76,53 @@ void cadastrar(char *produto) {
 	printf("Produto cadastrado com sucesso. \n \n");
 }
 
-void editar(char *produto) {
-    FILE *arquivo = criarOuCarregarArquivo("estoque.txt", "r");
-    FILE *temp = criarOuCarregarArquivo("arquivoTemporario.txt", "w");
-    char produtoLidoNoArquivo[100];
-    bool encontrado = false;
+bool verificarSeProdutoExiste(FILE *arquivoEstoque, char *produto) {
+	char produtoLidoNoArquivo[100];
+	
+	while (fscanf(arquivoEstoque, "%s", produtoLidoNoArquivo) == 1) {
+		if (strcmp(produtoLidoNoArquivo, produto) == 0) {
+			return true;
+		}
+	}
+	return false;
+}
 
-    while (fscanf(arquivo, "%s", produtoLidoNoArquivo) == 1) {
-        if (strcmp(produtoLidoNoArquivo, produto) == 0) {
-            char novoProduto[100];
-            printf("Produto encontrado, qual o produto que vai ficar no lugar? ");
-            scanf("%99s", novoProduto);
+void sobrescreverProduto(FILE *arquivoEstoque, FILE *arquivoTemporario, char *produtoSobrescrever, char *novoProduto) {
+	char produtoLidoNoArquivo[100];
+	
+	while (fscanf(arquivoEstoque, "%s", produtoLidoNoArquivo) == 1) {
+		if (strcmp(produtoLidoNoArquivo, produtoSobrescrever) == 0) {
+			fprintf(arquivoTemporario, "%s\n", novoProduto);
+		} else {
+			fprintf(arquivoTemporario, "%s\n", produtoLidoNoArquivo);
+		}
+	}
+	printf("Edicao salva com sucesso.");
+}
 
-            fprintf(temp, "%s\n", novoProduto); // escreve o novo produto
-            encontrado = true;
-        } else {
-            fprintf(temp, "%s\n", produtoLidoNoArquivo); // mantém os antigos
-        }
-    }
+void editar(char *produtoSobrescrever) {
+    FILE *arquivoEstoque = criarOuCarregarArquivo("estoque.txt", "r");
+    FILE *arquivoTemporario = criarOuCarregarArquivo("arquivoTemporario.txt", "w");
+    char novoProduto[100];
+    bool existe = verificarSeProdutoExiste(arquivoEstoque, produtoSobrescrever);
     
-    if (encontrado) {
-    	printf("Edicao salva com sucesso.");
+    if (existe) {
+    	printf("Produto encontrado, qual o produto que vai ficar no lugar? ");
+        scanf("%99s", novoProduto);
+        rewind(arquivoEstoque);
+        sobrescreverProduto(arquivoEstoque, arquivoTemporario, produtoSobrescrever, novoProduto);
 	} else {
 		printf("Produto não encontrado no estoque.");
 	}
+	
 	printf("\n \n");
-    fclose(arquivo);
-    fclose(temp);
+    fclose(arquivoEstoque);
+    fclose(arquivoTemporario);
 
     // substitui o original pelo temporário
     remove("estoque.txt");
     rename("arquivoTemporario.txt", "estoque.txt");
 }
-
 
 
 
