@@ -16,21 +16,38 @@ int main(int argc, char *argv[]) {
 			cadastrar(produto);
 			
 	    } else if (opcao == '2') {
-	    	char produto[100];
-			printf("Digite o nome do produto que voce quer editar: ");
-			scanf("%s", produto);
-			editar(produto);
+	    	int existemProdutosNoEstoque = verificarSeExistemProdutosNoEstoque();	
+	    	if (existemProdutosNoEstoque == 1) {
+		    	char produto[100];
+				printf("Digite o nome do produto que voce quer editar: ");
+				scanf("%s", produto);
+				editar(produto);
+			} else {
+				printf("Nao ha produtos no estoque. Primeiro cadastre pelo menos um. \n \n");
+			}
 			
 	    } else if (opcao == '3') {
-	    	char produto[100];
-	    	printf("Digite o nome do produto que voce quer deletar: ");
-	    	scanf("%s", produto);
-	    	deletar(produto);
-	    	
+	    	int existemProdutosNoEstoque = verificarSeExistemProdutosNoEstoque();	
+	    	if (existemProdutosNoEstoque == 1) {
+		    	char produto[100];
+		    	printf("Digite o nome do produto que voce quer deletar: ");
+		    	scanf("%s", produto);
+		    	deletar(produto);
+	    	} else {
+				printf("Nao ha produtos no estoque. Primeiro cadastre pelo menos um. \n \n");
+			}
+			
 	    } else if (opcao == '4') {
-	        printf("listar");
+	    	printf("\n \n");
+	    	int existemProdutosNoEstoque = verificarSeExistemProdutosNoEstoque();	
+	    	if (existemProdutosNoEstoque == 1) {
+	        	listar();
+	        } else {
+				printf("Nao ha produtos no estoque. Primeiro cadastre pelo menos um. \n \n");
+			}
+			
 	    } else if (opcao == '0'){
-	        printf("fechar sistema");
+	        printf("Fechando sistema. . .");
 	        break;
 	    }
 	}
@@ -79,6 +96,20 @@ void cadastrar(char *produto) {
 	printf("Produto cadastrado com sucesso. \n \n");
 }
 
+int verificarSeExistemProdutosNoEstoque() {	
+	FILE *arquivoEstoque = criarOuCarregarArquivo("estoque.txt", "r");
+	char produtoLidoNoArquivo[100];
+	
+	if (fscanf(arquivoEstoque, "%s", produtoLidoNoArquivo) == 1) {
+		fecharArquivo(arquivoEstoque);
+		return 1;
+	}
+	
+	fecharArquivo(arquivoEstoque);
+	return 0;
+
+}
+
 bool verificarSeProdutoExiste(FILE *arquivoEstoque, char *produto) {
 	char produtoLidoNoArquivo[100];
 	
@@ -90,7 +121,7 @@ bool verificarSeProdutoExiste(FILE *arquivoEstoque, char *produto) {
 	return false;
 }
 
-void sobrescreverProduto(FILE *arquivoEstoque, FILE *arquivoTemporario, char *produtoSobrescrever, char *novoProduto) {
+void sobrescreverProduto(FILE *arquivoEstoque, FILE *arquivoTemporario, char *produtoSobrescrever, char *novoProduto) {	
 	char produtoLidoNoArquivo[100];
 	
 	while (fscanf(arquivoEstoque, "%s", produtoLidoNoArquivo) == 1) {
@@ -104,8 +135,7 @@ void sobrescreverProduto(FILE *arquivoEstoque, FILE *arquivoTemporario, char *pr
 }
 
 void editar(char *produtoSobrescrever) {
-    FILE *arquivoEstoque = criarOuCarregarArquivo("estoque.txt", "r");
-    FILE *arquivoTemporario = criarOuCarregarArquivo("arquivoTemporario.txt", "w");
+    FILE *arquivoEstoque = criarOuCarregarArquivo("estoque.txt", "r");    
     char novoProduto[100];
     bool existe = verificarSeProdutoExiste(arquivoEstoque, produtoSobrescrever);
     
@@ -113,18 +143,24 @@ void editar(char *produtoSobrescrever) {
     	printf("Produto encontrado, qual o produto que vai ficar no lugar? ");
         scanf("%99s", novoProduto);
         rewind(arquivoEstoque);
+        
+        FILE *arquivoTemporario = criarOuCarregarArquivo("arquivoTemporario", "w");
         sobrescreverProduto(arquivoEstoque, arquivoTemporario, produtoSobrescrever, novoProduto);
+        
+        fecharArquivo(arquivoEstoque);
+		fecharArquivo(arquivoTemporario); 
+		
+        remove("estoque.txt");
+		rename("arquivoTemporario", "estoque.txt"); 
+		
+ 
 	} else {
 		printf("Produto nao encontrado no estoque.");
 	}
 	
 	printf("\n \n");
 	fecharArquivo(arquivoEstoque);
-	fecharArquivo(arquivoTemporario);
 
-    // substitui o original pelo temporário
-    remove("estoque.txt");
-    rename("arquivoTemporario.txt", "estoque.txt");
 }
 
 void removerProduto (FILE *arquivoEstoque, FILE *arquivoTemporario, char *produtoDeletar) {
@@ -136,29 +172,44 @@ void removerProduto (FILE *arquivoEstoque, FILE *arquivoTemporario, char *produt
 		}
 	}
 	
-	printf("Remoção salva com sucesso.");
+	printf("Remocao salva com sucesso.");
 }
+
 void deletar(char *produtoDeletar) {
 	FILE *arquivoEstoque = criarOuCarregarArquivo("estoque.txt", "r");
-	FILE *arquivoTemporario = criarOuCarregarArquivo("arquivoTemporario", "w");
 	
 	bool existe = verificarSeProdutoExiste(arquivoEstoque, produtoDeletar);
 	
 	if (existe) {
 		rewind(arquivoEstoque);
+		FILE *arquivoTemporario = criarOuCarregarArquivo("arquivoTemporario", "w");
+		
 		removerProduto(arquivoEstoque, arquivoTemporario, produtoDeletar);
+		
+		fecharArquivo(arquivoEstoque);
+		fecharArquivo(arquivoTemporario);
+		
+		remove("estoque.txt");
+		rename("arquivoTemporario", "estoque.txt");
+		
 	} else {
 		printf("Produto nao encontrado no estoque");
 	}
 	printf("\n \n");
+	
 	fecharArquivo(arquivoEstoque);
-	fecharArquivo(arquivoTemporario);
-	
-	remove("estoque.txt");
-	rename("arquivoTemporario", "estoque.txt");
-	
 }
 
+void listar () {
+	FILE *arquivoEstoque = criarOuCarregarArquivo("estoque.txt", "r");
+	char produtoLidoNoArquivo[100];
+	printf("----- Lista de Produtos no Estoque ----- \n");
+	while (fscanf(arquivoEstoque, "%s", produtoLidoNoArquivo) == 1) {
+		printf("%s\n", produtoLidoNoArquivo);
+	}
+	printf("---------------------------------------- \n");
+	printf("Listagem concluida com sucesso. \n \n \n \n");
+}
 
 
 
