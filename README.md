@@ -1,12 +1,11 @@
-# 📚 Repositório da Disciplina de **Programação de Software Básico em C, Turma 3002**  
+# 📚 Repositório Pessoal da Disciplina de **Programação de Software Básico em C, Turma 3002**  
 **🏫 Unifavip Wyden**  
 
 ---
 
 ## 💻 Sobre o Projeto  
 Este repositório reúne e disponibiliza todas as **atividades e exercícios** desenvolvidos na disciplina de **Programação de Software Básico**, ministrada na **Unifavip Wyden**.  
-O conteúdo é destinado **exclusivamente para fins educativos e pedagógicos**, voltado para alunos **regularmente matriculados na turma 3002**.  
-
+O conteúdo é destinado **exclusivamente para fins educativos e pedagógicos**, voltado para **fins organizacionais de uso pessoal**.  
 ---
 
 ## 🚀 Tecnologias Utilizadas  
@@ -41,7 +40,7 @@ Certifique-se de ter o compilador C configurado corretamente.
 ---
 
 ### 📌 Observações Importantes
-- ⚠ Este repositório é público apenas para fins acadêmicos.
+- ⚠ Este repositório pessoal é público apenas para fins acadêmicos.
 - 📚 Todos os códigos podem ser estudados, modificados e testados livremente.
 - 🚫 Não utilize o conteúdo para fins comerciais ou plágio em avaliações.
 
